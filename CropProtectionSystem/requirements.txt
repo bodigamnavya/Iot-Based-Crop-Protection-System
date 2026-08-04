@@ -3,5 +3,6 @@ opencv-python
 ultralytics
 numpy
 pymysql
-playsound
+flask-mysqldb
+playsound==1.2.2
 gunicorn
