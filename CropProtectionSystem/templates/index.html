@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Crop Protection System</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<h1>AI Based Crop Protection System</h1>
+
+<h2>Animal Detection Dashboard</h2>
+
+<div class="box">
+
+<p>Status : {{ status }}</p>
+
+<p>Camera : ON</p>
+
+<p>Animal : {{ animal }}</p>
+<img src="{{ url_for('video') }}" width="700">
+<h2>Water Management</h2>
+
+<p>Soil Moisture : {{ soil }}</p>
+
+<p>Pump Status : {{ pump }}</p>
+
+</div>
+<h2>🌱 AI Based Crop Protection System</h2>
+
+<div class="card">
+    <h3>Animal Detection</h3>
+
+    <p>🐄 Animal : {{ animal }}</p>
+    <p>📊 Confidence : {{ confidence }}</p>
+    <p>🚨 Status : {{ status }}</p>
+
+    <img src="{{ url_for('video') }}" width="600">
+</div>
+
+<div class="card">
+    <h3>Water Management</h3>
+
+    <p>💧 Soil Moisture : {{ soil }}</p>
+    <p>🚰 Pump Status : {{ pump }}</p>
+</div>
+
+<br>
+
+<a href="/history">
+    <button>Detection History</button>
+    
+<a href="/water_history">
+</a>
+    <button>Water History</button>
+</a>
+</body>
+</html>
