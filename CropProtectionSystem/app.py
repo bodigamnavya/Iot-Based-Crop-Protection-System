@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, Response, request, jsonify
 import cv2
 import os
 from ultralytics import YOLO
@@ -13,13 +13,14 @@ app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST')
 app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER')
 app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD')
 app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB')
-app.config['MYSQL_PORT'] = int(os.environ.get('MYSQL_PORT'))
+app.config['MYSQL_PORT'] = int(os.environ.get('MYSQL_PORT', 3306))
 mysql = MySQL(app)
 # Load YOLO model
 model = YOLO("yolov8n.pt")
 
 # Open camera
-camera = cv2.VideoCapture(0)
+camera = None
+#camera = cv2.VideoCapture(0)
 current_animal = "No Animal"
 current_confidence = 0
 
@@ -92,7 +93,7 @@ def generate_frames():
                     "horse",
                     "sheep"
                 ]:
-                    global current_animal, current_confidence
+                
 
                     current_animal = animal_name
                     current_confidence = round(confidence * 100, 2)
