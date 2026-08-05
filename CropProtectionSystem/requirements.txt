@@ -1,8 +1,4 @@
 Flask
 opencv-python
 ultralytics
-numpy
-pymysql
 flask-mysqldb
-playsound==1.2.2
-gunicorn
