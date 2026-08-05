@@ -15,6 +15,10 @@ app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD')
 app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB')
 app.config['MYSQL_PORT'] = int(os.environ.get('MYSQL_PORT'))
 mysql = MySQL(app)
+print("HOST =", os.environ.get("MYSQL_HOST"))
+print("USER =", os.environ.get("MYSQL_USER"))
+print("DB =", os.environ.get("MYSQL_DB"))
+print("PORT =", os.environ.get("MYSQL_PORT"))
 # Load YOLO model
 model = YOLO("yolov8n.pt")
 
