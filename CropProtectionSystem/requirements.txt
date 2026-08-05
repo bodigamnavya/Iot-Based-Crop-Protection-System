@@ -1,4 +1,7 @@
 Flask
-opencv-python
+gunicorn
+opencv-python-headless
 ultralytics
 flask-mysqldb
+mysqlclient
+numpy

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template
 import cv2
 import os
 from ultralytics import YOLO
