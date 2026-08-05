@@ -3,5 +3,6 @@ gunicorn
 opencv-python-headless
 ultralytics
 flask-mysqldb
+playsound==1.2.2
 mysqlclient
 numpy
