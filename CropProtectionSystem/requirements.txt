@@ -1,8 +1,0 @@
-Flask
-opencv-python
-ultralytics
-flask-mysqldb
-numpy
-pymysql
-playsound==1.2.2
-gunicorn
