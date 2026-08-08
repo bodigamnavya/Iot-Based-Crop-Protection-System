@@ -1,9 +1,5 @@
-
-from flask import Flask, render_template, Response, request, jsonify
+from flask import Flask, render_template, Response
 import cv2
-import os
-import base64
-import numpy as np
 from ultralytics import YOLO
 from flask_mysqldb import MySQL
 from alarm import play_alarm
@@ -11,18 +7,16 @@ from water_sensor import get_soil_moisture
 from datetime import datetime
 
 app = Flask(__name__)
-
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'Crop_Protection'
-app.config['MYSQL_PORT'] = int(os.environ.get('MYSQL_PORT', 3306))
+app.config['MYSQL_DB'] = 'crop_protection'
+
 mysql = MySQL(app)
 # Load YOLO model
 model = YOLO("yolov8n.pt")
 
 # Open camera
-#camera = None
 camera = cv2.VideoCapture(0)
 current_animal = "No Animal"
 current_confidence = 0
@@ -68,7 +62,7 @@ def generate_frames():
     while True:
 
         success, frame = camera.read()
-        print(success)
+
         if not success:
             break
 
@@ -96,7 +90,7 @@ def generate_frames():
                     "horse",
                     "sheep"
                 ]:
-                
+                    global current_animal, current_confidence
 
                     current_animal = animal_name
                     current_confidence = round(confidence * 100, 2)
@@ -165,63 +159,6 @@ def video():
         mimetype=
         'multipart/x-mixed-replace; boundary=frame'
     )
-    @app.route("/detect", methods=["POST"])
-    def detect():
-
-        global current_animal, current_confidence
-
-        data = request.get_json()
-
-        image = data["image"]
-
-        image = image.split(",")[1]
-
-        image = base64.b64decode(image)
-
-        npimg = np.frombuffer(image, np.uint8)
-
-        frame = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
-
-        results = model(frame)
-
-        for result in results:
-
-            for box in result.boxes:
-
-                cls = int(box.cls[0])
-
-                confidence = float(box.conf[0])
-
-                if confidence < 0.60:
-                    continue
-
-                animal = model.names[cls]
-
-                if animal in [
-                    "dog",
-                    "cow",
-                    "cat",
-                    "horse",
-                    "sheep",
-                    "bird",
-                    "elephant"
-                ]:
-
-                    current_animal = animal
-                    current_confidence = round(confidence * 100, 2)
-                    print(
-                    "Animal Detected:",
-                    animal,
-                    confidence
-                )
-                    play_alarm()
-
-    return jsonify({
-        "animal": current_animal,
-        "confidence": current_confidence
-    })
-    
-    
 @app.route("/history")
 
 def history():
