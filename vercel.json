@@ -1,3 +1,9 @@
 {
-  "outputDirectory": "."
+  "rewrites": [
+    { "source": "/", "destination": "/frontend/index.html" },
+    { "source": "/history", "destination": "/frontend/history.html" },
+    { "source": "/water_history", "destination": "/frontend/water_history.html" },
+    { "source": "/css/(.*)", "destination": "/frontend/css/$1" },
+    { "source": "/js/(.*)", "destination": "/frontend/js/$1" }
+  ]
 }
