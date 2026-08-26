@@ -1,11 +1,11 @@
-import os
-import sys
+from flask import Flask, jsonify
 
-# Ensure CropProtectionSystem is on sys.path
-root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-crop_sys_dir = os.path.join(root_dir, "CropProtectionSystem")
+app = Flask(__name__)
 
-if crop_sys_dir not in sys.path:
-    sys.path.insert(0, crop_sys_dir)
-
-from app import app
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    return jsonify({
+        "status": "online",
+        "service": "IoT Crop Protection System API Gateway"
+    })
