@@ -1,8 +1,9 @@
-Flask
-opencv-python
-ultralytics
-flask-mysqldb
-numpy
-pymysql
-playsound==1.2.2
-gunicorn
+Flask==3.0.3
+gunicorn==23.0.0
+numpy==1.26.4
+opencv-python-headless==4.10.0.84
+psycopg2-binary==2.9.9
+ultralytics==8.3.0
+torch==2.5.1+cpu
+torchvision==0.20.1+cpu
+
