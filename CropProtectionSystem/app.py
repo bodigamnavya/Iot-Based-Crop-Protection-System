@@ -32,6 +32,8 @@ CORS(app)
 def get_db_connection():
     db_url = os.environ.get("DATABASE_URL")
     if db_url:
+        if db_url.startswith("postgres://"):
+            db_url = db_url.replace("postgres://", "postgresql://", 1)
         return psycopg2.connect(db_url)
     return psycopg2.connect(
         host=os.environ.get("PGHOST", "localhost"),
@@ -51,8 +53,7 @@ try:
     conn.close()
     print("PostgreSQL connected successfully!")
 except Exception as e:
-    print("PostgreSQL connection failed:")
-    print(e)
+    print("PostgreSQL connection note (will retry on requests):", e)
 
 
 # ============================================================
@@ -74,9 +75,12 @@ except Exception as e:
 # Open Camera
 # ============================================================
 
+camera_available = False
 try:
     camera = cv2.VideoCapture(0)
-    if not camera.isOpened():
+    if camera and camera.isOpened():
+        camera_available = True
+    else:
         print("WARNING: Local camera not available (normal in cloud deployment).")
 except Exception as e:
     print("Camera init note:", e)
@@ -513,13 +517,46 @@ def api_water_history():
 
 
 # ============================================================
+# Health Check Endpoints
+# ============================================================
+
+@app.route("/health")
+def health():
+    return jsonify({
+        "status": "ok",
+        "camera_available": camera_available,
+        "yolo_loaded": model is not None
+    })
+
+
+@app.route("/db-health")
+def db_health():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT 1")
+        cur.close()
+        conn.close()
+        return jsonify({
+            "database": "connected",
+            "status": "ok"
+        })
+    except Exception as e:
+        return jsonify({
+            "database": "disconnected",
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+
+# ============================================================
 # Run Flask Application
 # ============================================================
 
 if __name__ == "__main__":
-
+    port = int(os.environ.get("PORT", 5000))
     app.run(
         host="0.0.0.0",
-        port=5000,
+        port=port,
         debug=True
     )
