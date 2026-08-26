@@ -8,6 +8,8 @@
 
 <h1>Animal Detection History</h1>
 
+{% if data %}
+
 <table border="1">
 
 <tr>
@@ -30,5 +32,15 @@
 
 </table>
 
+{% else %}
+
+<p>No animal detections yet.</p>
+
+{% endif %}
+
+<br>
+
+<a href="/">Back to Dashboard</a>
+
 </body>
-</html>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Water History</title>
+</head>
+
+<body>
+
+<h1>Water Management History</h1>
+
+{% if data %}
+
+<table border="1">
+
+<tr>
+    <th>Soil Moisture</th>
+    <th>Pump Status</th>
+    <th>Time</th>
+</tr>
+
+{% for row in data %}
+
+<tr>
+    <td>{{ row[0] }}</td>
+    <td>{{ row[1] }}</td>
+    <td>{{ row[2] }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% else %}
+
+<p>No water management records yet.</p>
+
+{% endif %}
+
+<br>
+
+<a href="/">Back to Dashboard</a>
+
+</body>
+</html>
