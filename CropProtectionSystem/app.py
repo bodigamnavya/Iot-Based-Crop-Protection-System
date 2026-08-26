@@ -8,7 +8,15 @@ from datetime import datetime
 import time
 
 
-app = Flask(__name__)
+import os
+
+base_dir = os.path.abspath(os.path.dirname(__file__))
+
+app = Flask(
+    __name__,
+    template_folder=os.path.join(base_dir, "templates"),
+    static_folder=os.path.join(base_dir, "static")
+)
 
 
 # ============================================================
@@ -16,12 +24,15 @@ app = Flask(__name__)
 # ============================================================
 
 def get_db_connection():
+    db_url = os.environ.get("DATABASE_URL")
+    if db_url:
+        return psycopg2.connect(db_url)
     return psycopg2.connect(
-        host="localhost",
-        database="crop_protection",
-        user="postgres",
-        password="Navya09",
-        port="5432"
+        host=os.environ.get("PGHOST", "localhost"),
+        database=os.environ.get("PGDATABASE", "crop_protection"),
+        user=os.environ.get("PGUSER", "postgres"),
+        password=os.environ.get("PGPASSWORD", "Navya09"),
+        port=os.environ.get("PGPORT", "5432")
     )
 
 
