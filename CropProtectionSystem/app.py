@@ -1,4 +1,5 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, jsonify
+from flask_cors import CORS
 import cv2
 from ultralytics import YOLO
 import psycopg2
@@ -6,8 +7,6 @@ from alarm import play_alarm
 from water_sensor import get_soil_moisture
 from datetime import datetime
 import time
-
-
 import os
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
@@ -17,6 +16,9 @@ app = Flask(
     template_folder=os.path.join(base_dir, "templates"),
     static_folder=os.path.join(base_dir, "static")
 )
+
+# Enable CORS for all routes (supports Vercel and localhost)
+CORS(app)
 
 
 # ============================================================
@@ -414,13 +416,106 @@ def water_history():
 
 
 # ============================================================
+# REST API Endpoints (for Vercel/Frontend Integration)
+# ============================================================
+
+@app.route("/api/status")
+def api_status():
+    soil, pump = get_soil_moisture()
+    return jsonify({
+        "status": "Active",
+        "animal": current_animal,
+        "confidence": current_confidence,
+        "soil": soil,
+        "pump": pump
+    })
+
+
+@app.route("/api/sensor")
+def api_sensor():
+    soil, pump = get_soil_moisture()
+    return jsonify({
+        "soil_moisture": soil,
+        "pump_status": pump
+    })
+
+
+@app.route("/api/history")
+def api_history():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            """
+            SELECT
+                Animal_Name,
+                Confidence,
+                Detection_Time,
+                Alert_Status
+            FROM Animal_Detection
+            ORDER BY Detection_ID DESC
+            """
+        )
+        rows = cursor.fetchall()
+        data = [
+            {
+                "animal": r[0],
+                "confidence": float(r[1]) if r[1] is not None else 0.0,
+                "time": str(r[2]),
+                "status": r[3]
+            }
+            for r in rows
+        ]
+    except Exception as e:
+        print("API error (history):", e)
+        data = []
+    finally:
+        cursor.close()
+        conn.close()
+    return jsonify(data)
+
+
+@app.route("/api/water_history")
+def api_water_history():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            """
+            SELECT
+                Soil_Moisture,
+                Pump_Status,
+                Water_Time
+            FROM Water_Management
+            ORDER BY Water_ID DESC
+            """
+        )
+        rows = cursor.fetchall()
+        data = [
+            {
+                "soil_moisture": r[0],
+                "pump_status": r[1],
+                "time": str(r[2])
+            }
+            for r in rows
+        ]
+    except Exception as e:
+        print("API error (water history):", e)
+        data = []
+    finally:
+        cursor.close()
+        conn.close()
+    return jsonify(data)
+
+
+# ============================================================
 # Run Flask Application
 # ============================================================
 
 if __name__ == "__main__":
 
     app.run(
-        host="127.0.0.1",
+        host="0.0.0.0",
         port=5000,
         debug=True
     )
