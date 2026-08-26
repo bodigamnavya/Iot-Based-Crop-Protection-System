@@ -1,3 +1,19 @@
 {
-  "cleanUrls": true
+  "version": 2,
+  "builds": [
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "history.html", "use": "@vercel/static" },
+    { "src": "water_history.html", "use": "@vercel/static" },
+    { "src": "css/**", "use": "@vercel/static" },
+    { "src": "js/**", "use": "@vercel/static" },
+    { "src": "frontend/**", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/css/(.*)", "dest": "/css/$1" },
+    { "src": "/js/(.*)", "dest": "/js/$1" },
+    { "src": "/history", "dest": "/history.html" },
+    { "src": "/water_history", "dest": "/water_history.html" },
+    { "src": "/frontend/(.*)", "dest": "/frontend/$1" },
+    { "src": "/", "dest": "/index.html" }
+  ]
 }
