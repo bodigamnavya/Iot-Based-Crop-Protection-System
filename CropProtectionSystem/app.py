@@ -75,6 +75,7 @@ except Exception as e:
 # Open Camera
 # ============================================================
 
+camera = None
 camera_available = False
 try:
     camera = cv2.VideoCapture(0)
