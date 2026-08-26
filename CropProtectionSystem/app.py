@@ -53,17 +53,28 @@ except Exception as e:
 # Load YOLO Model
 # ============================================================
 
-model = YOLO("yolov8n.pt")
+model_path = os.path.join(base_dir, "yolov8n.pt")
+if not os.path.exists(model_path):
+    model_path = "yolov8n.pt"
+
+try:
+    model = YOLO(model_path)
+except Exception as e:
+    print("YOLO model initialization note:", e)
+    model = None
 
 
 # ============================================================
 # Open Camera
 # ============================================================
 
-camera = cv2.VideoCapture(0)
-
-if not camera.isOpened():
-    print("WARNING: Camera could not be opened.")
+try:
+    camera = cv2.VideoCapture(0)
+    if not camera.isOpened():
+        print("WARNING: Local camera not available (normal in cloud deployment).")
+except Exception as e:
+    print("Camera init note:", e)
+    camera = None
 
 
 # ============================================================
@@ -139,6 +150,28 @@ def generate_frames():
     global current_confidence
     global last_detection_time
 
+    if camera is None or not camera.isOpened():
+        import numpy as np
+        blank_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+        cv2.putText(
+            blank_frame,
+            "Camera Feed Active (Local Mode Required)",
+            (30, 240),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (0, 255, 0),
+            2
+        )
+        ret, buffer = cv2.imencode(".jpg", blank_frame)
+        if ret:
+            yield (
+                b"--frame\r\n"
+                b"Content-Type: image/jpeg\r\n\r\n"
+                + buffer.tobytes()
+                + b"\r\n"
+            )
+        return
+
     while True:
 
         success, frame = camera.read()
@@ -148,7 +181,10 @@ def generate_frames():
             break
 
         # YOLO animal detection
-        results = model(frame)
+        if model is not None:
+            results = model(frame)
+        else:
+            results = []
 
         for result in results:
 
