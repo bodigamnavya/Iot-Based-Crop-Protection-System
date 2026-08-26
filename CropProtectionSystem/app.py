@@ -1,3 +1,10 @@
+import os
+import sys
+
+base_dir = os.path.abspath(os.path.dirname(__file__))
+if base_dir not in sys.path:
+    sys.path.insert(0, base_dir)
+
 from flask import Flask, render_template, Response, jsonify
 from flask_cors import CORS
 import cv2
@@ -7,9 +14,6 @@ from alarm import play_alarm
 from water_sensor import get_soil_moisture
 from datetime import datetime
 import time
-import os
-
-base_dir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(
     __name__,
