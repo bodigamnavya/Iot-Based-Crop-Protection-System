@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="IoT Based Crop Protection System with AI — Real-time animal detection dashboard and water management.">
+    <title>AI Crop Protection System — Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+    <header class="header">
+        <h1>🌱 AI Based Crop Protection System</h1>
+        <p>IoT Dashboard — Real-time Monitoring</p>
+    </header>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <span class="status-dot offline" id="status-dot"></span>
+        <span id="status-text">Connecting to backend…</span>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="cards-grid">
+
+        <!-- Animal Detection Card -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-icon">🐄</span>
+                <span class="card-title">Animal Detection</span>
+            </div>
+
+            <!-- Video Stream Container -->
+            <div style="margin-bottom: 1.25rem; text-align: center; overflow: hidden; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #000;">
+                <img id="camera-stream" src="" style="width: 100%; height: auto; max-height: 280px; display: block; object-fit: contain;" alt="Live Camera Feed (Offline)">
+            </div>
+
+            <div class="data-row">
+                <span class="data-label">Detected Animal</span>
+                <span class="data-value highlight" id="val-animal">—</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Confidence</span>
+                <span class="data-value" id="val-confidence">—</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Alert Status</span>
+                <span id="val-det-status"><span class="badge badge-off">Waiting</span></span>
+            </div>
+        </div>
+
+        <!-- Water Management Card -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-icon">💧</span>
+                <span class="card-title">Water Management</span>
+            </div>
+
+            <div class="data-row">
+                <span class="data-label">Soil Moisture</span>
+                <span class="data-value highlight" id="val-soil">—</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Pump Status</span>
+                <span id="val-pump"><span class="badge badge-off">OFF</span></span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-buttons">
+        <a href="history.html" class="btn">📋 Detection History</a>
+        <a href="water_history.html" class="btn">🚰 Water History</a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        IoT Based Crop Protection System &copy; 2026
+    </div>
+
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/script.js"></script>
+<script>
+    startAutoRefresh(loadDashboard, 10000);
+</script>
+
+</body>
+</html>

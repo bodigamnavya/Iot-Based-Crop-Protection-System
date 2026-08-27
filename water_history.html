@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Water management history — view soil moisture logs and pump operation history.">
+    <title>Water Management History — AI Crop Protection</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+    <header class="header">
+        <h1>🚰 Water Management History</h1>
+        <p>Soil moisture levels and automated irrigation logs</p>
+    </header>
+
+    <!-- Loading State -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <span>Loading history…</span>
+    </div>
+
+    <!-- Empty State (hidden by default) -->
+    <div class="empty-state" id="empty-state" style="display: none;">
+        <div class="icon">🔍</div>
+        <p>No water management logs recorded yet.</p>
+    </div>
+
+    <!-- History Table -->
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>💧 Soil Moisture (%)</th>
+                    <th>🚰 Pump Status</th>
+                    <th>⏰ Recorded Time</th>
+                </tr>
+            </thead>
+            <tbody id="water-body">
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-buttons">
+        <a href="index.html" class="btn btn-primary">← Back to Dashboard</a>
+        <a href="history.html" class="btn">📋 Detection History</a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        IoT Based Crop Protection System &copy; 2026
+    </div>
+
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/script.js"></script>
+<script>
+    loadWaterHistory();
+</script>
+
+</body>
+</html>
