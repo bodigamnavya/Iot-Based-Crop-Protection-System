@@ -57,6 +57,40 @@ except Exception as e:
 
 
 # ============================================================
+# Initialize Database Tables
+# ============================================================
+
+def init_db():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS Animal_Detection (
+                Detection_ID SERIAL PRIMARY KEY,
+                Animal_Name VARCHAR(100) NOT NULL,
+                Confidence REAL,
+                Detection_Time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                Camera_ID INT DEFAULT 1,
+                Alert_Status VARCHAR(50) DEFAULT 'Active'
+            );
+            CREATE TABLE IF NOT EXISTS Water_Management (
+                Water_ID SERIAL PRIMARY KEY,
+                Soil_Moisture REAL,
+                Pump_Status VARCHAR(20),
+                Water_Time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        conn.commit()
+        cur.close()
+        conn.close()
+        print("PostgreSQL tables verified/created successfully!")
+    except Exception as e:
+        print("PostgreSQL table init note (will retry on requests):", e)
+
+init_db()
+
+
+# ============================================================
 # Load YOLO Model
 # ============================================================
 
