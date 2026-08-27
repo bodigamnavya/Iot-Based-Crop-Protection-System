@@ -1,3 +1,8 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/",              "destination": "/templates/index.html" },
+    { "source": "/history",       "destination": "/templates/history.html" },
+    { "source": "/water_history", "destination": "/templates/water_history.html" }
+  ]
 }

@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="IoT Based Crop Protection System with AI — Real-time animal detection dashboard and water management.">
+    <meta name="description" content="IoT Based Crop Protection System with AI — Real-time animal detection and water management dashboard.">
     <title>AI Crop Protection System — Dashboard</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
@@ -19,8 +19,8 @@
 
     <!-- Status Bar -->
     <div class="status-bar">
-        <span class="status-dot offline" id="status-dot"></span>
-        <span id="status-text">Connecting to backend…</span>
+        <span class="status-dot" id="status-dot"></span>
+        <span id="status-text">System Online — Backend Connected</span>
     </div>
 
     <!-- Cards Grid -->
@@ -32,17 +32,24 @@
                 <span class="card-icon">🐄</span>
                 <span class="card-title">Animal Detection</span>
             </div>
+
+            <div style="margin-bottom: 1.25rem; text-align: center; overflow: hidden; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #000;">
+                <img src="{{ url_for('video') }}" style="width: 100%; height: auto; max-height: 280px; display: block; object-fit: contain;" alt="Live Camera Feed">
+            </div>
+
             <div class="data-row">
                 <span class="data-label">Detected Animal</span>
-                <span class="data-value highlight" id="val-animal">—</span>
+                <span class="data-value highlight" id="val-animal">{{ animal or 'No Animal' }}</span>
             </div>
             <div class="data-row">
                 <span class="data-label">Confidence</span>
-                <span class="data-value" id="val-confidence">—</span>
+                <span class="data-value" id="val-confidence">{{ confidence or 0 }}%</span>
             </div>
             <div class="data-row">
                 <span class="data-label">Alert Status</span>
-                <span id="val-det-status"><span class="badge badge-off">Waiting</span></span>
+                <span id="val-det-status">
+                    <span class="badge badge-active">{{ status or 'Active' }}</span>
+                </span>
             </div>
         </div>
 
@@ -54,11 +61,17 @@
             </div>
             <div class="data-row">
                 <span class="data-label">Soil Moisture</span>
-                <span class="data-value highlight" id="val-soil">—</span>
+                <span class="data-value highlight" id="val-soil">{{ soil or 0 }}%</span>
             </div>
             <div class="data-row">
                 <span class="data-label">Pump Status</span>
-                <span id="val-pump"><span class="badge badge-off">OFF</span></span>
+                <span id="val-pump">
+                    {% if pump and pump.lower() == 'on' %}
+                        <span class="badge badge-on">ON</span>
+                    {% else %}
+                        <span class="badge badge-off">OFF</span>
+                    {% endif %}
+                </span>
             </div>
         </div>
 
@@ -66,8 +79,8 @@
 
     <!-- Navigation -->
     <div class="nav-buttons">
-        <a href="/history" class="btn">📋 Detection History</a>
-        <a href="/water_history" class="btn">🚰 Water History</a>
+        <a href="{{ url_for('history') }}" class="btn">📋 Detection History</a>
+        <a href="{{ url_for('water_history') }}" class="btn">🚰 Water History</a>
     </div>
 
     <!-- Footer -->
@@ -77,8 +90,8 @@
 
 </div>
 
-<script src="js/config.js"></script>
-<script src="js/script.js"></script>
+<script src="{{ url_for('static', filename='config.js') }}"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 <script>
     startAutoRefresh(loadDashboard, 10000);
 </script>

@@ -39,7 +39,7 @@ def get_db_connection():
         host=os.environ.get("PGHOST", "localhost"),
         database=os.environ.get("PGDATABASE", "crop_protection"),
         user=os.environ.get("PGUSER", "postgres"),
-        password=os.environ.get("PGPASSWORD", "Navya09"),
+        password=os.environ.get("PGPASSWORD", ""),
         port=os.environ.get("PGPORT", "5432")
     )
 
